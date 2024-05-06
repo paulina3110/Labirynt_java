@@ -12,11 +12,16 @@ public class GUI extends JFrame {
     JTextField wysokosc;
     JLabel szerokosc_lab;
     JTextField szerokosc;
+    JButton wyswietl;
+    JButton znajdz_sciezke;
+    JButton zmien_pkt;
 
     GUI() {
         setTitle("Labirynt");
-        setSize(1000, 1000);
+        setSize(900, 1000);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+        setLocationRelativeTo(null);
 
         tytul = new JLabel("Rozwiązywacz labiryntu", SwingConstants.CENTER);
         tytul.setFont(new Font("Arial", Font.BOLD, 36));
@@ -39,7 +44,7 @@ public class GUI extends JFrame {
         plik_rodzaj.setBounds(100, 200, 300, 30);
         panel.add(plik_rodzaj);
 
-        String[] rodzaje = {"Plik tekstowy", "Plik binarny"};
+        String[] rodzaje = {"  Plik tekstowy", "  Plik binarny"};
         wybor_rodzaju = new JComboBox<>(rodzaje);
         wybor_rodzaju.setBounds(400, 200, 300, 30);
         wybor_rodzaju.setBackground(Color.WHITE);
@@ -60,6 +65,40 @@ public class GUI extends JFrame {
         wysokosc = new JTextField();
         wysokosc.setBounds(400, 300, 300, 30);
         panel.add(wysokosc);
+
+        wyswietl = new JButton("Wyświetl labirynt");
+        wyswietl.setBounds(100, 380, 200, 50);
+        wyswietl.setFocusable(false);
+        wyswietl.setHorizontalTextPosition(JButton.CENTER);
+        wyswietl.setVerticalTextPosition(JButton.CENTER);
+        wyswietl.setBackground(new Color(0xAFD6D1));
+        wyswietl.setBorder(BorderFactory.createEmptyBorder());
+        panel.add(wyswietl);
+
+
+        ImageIcon icon = new ImageIcon("labirynt.jpg");
+        JLabel obrazek = new JLabel();
+        obrazek.setBounds(100, 400, 1000, 400);
+        obrazek.setIcon(icon);
+        panel.add(obrazek);
+
+        znajdz_sciezke = new JButton("Znajdź najkrótszą ścieżkę");
+        znajdz_sciezke.setBounds(100, 780, 200, 50);
+        znajdz_sciezke.setFocusable(false);
+        znajdz_sciezke.setHorizontalTextPosition(JButton.CENTER);
+        znajdz_sciezke.setVerticalTextPosition(JButton.CENTER);
+        znajdz_sciezke.setBackground(new Color(0xAFD6D1));
+        znajdz_sciezke.setBorder(BorderFactory.createEmptyBorder());
+        panel.add(znajdz_sciezke);
+
+        zmien_pkt = new JButton("Zmień punkt startowy/końcowy");
+        zmien_pkt.setBounds(320, 780, 220, 50);
+        zmien_pkt.setFocusable(false);
+        zmien_pkt.setHorizontalTextPosition(JButton.CENTER);
+        zmien_pkt.setVerticalTextPosition(JButton.CENTER);
+        zmien_pkt.setBackground(new Color(0xAFD6D1));
+        zmien_pkt.setBorder(BorderFactory.createEmptyBorder());
+        panel.add(zmien_pkt);
 
         panel.setBounds(0, 0, 1000, 1000);
         add(panel);
