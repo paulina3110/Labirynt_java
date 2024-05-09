@@ -1,23 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-public class GUI extends JFrame {
+public class GUI extends JFrame implements ActionListener {
 
     JLabel tytul;
-    JLabel plik_nazwa;
+    JPanel menu;
     JTextField nazwa;
-    JLabel plik_rodzaj;
-    JComboBox<String> wybor_rodzaju;
-    JLabel wysokosc_lab;
-    JTextField wysokosc;
-    JLabel szerokosc_lab;
-    JTextField szerokosc;
     JButton wyswietl;
-    JButton znajdz_sciezke;
-    JButton zmien_pkt;
+    JButton znajdzSciezke;
+    JButton zmienPkt;
+    JButton nazwaPliku;
 
 
     GUI() {
@@ -46,59 +43,45 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
 
-        tytul = new JLabel("Rozwiązywacz labiryntu", SwingConstants.CENTER);
-        //tytul.setFont(new Font("Arial", Font.BOLD, 36));
-        tytul.setFont(syne);
-        tytul.setBounds(-60, 50, 1000, 60);
-        add(tytul);
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBackground(Color.WHITE);
 
+        menu = new JPanel();
+        menu.setBounds(0, 0, 1000, 70);
+        menu.setFont(poppins);
+        menu.setBackground(new Color(0xE1E1E1));
+        menu.setLayout(null);
 
-        plik_nazwa = new JLabel("Podaj nazwę pliku z labiryntem:");
-        plik_nazwa.setBounds(100, 150, 300, 30);
-        plik_nazwa.setFont(poppins);
-        panel.add(plik_nazwa);
+
+        nazwaPliku = new JButton("Podaj nazwę pliku z labiryntem");
+        nazwaPliku.setBounds(40, 15, 250, 40);
+        nazwaPliku.setFocusable(false);
+        nazwaPliku.setHorizontalTextPosition(JButton.CENTER);
+        nazwaPliku.setVerticalTextPosition(JButton.CENTER);
+        nazwaPliku.setBackground(new Color(0xE1E1E1));
+        nazwaPliku.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+        nazwaPliku.setFont(poppins);
+        nazwaPliku.addActionListener(this);
+        menu.add(nazwaPliku);
 
         nazwa = new JTextField();
-        nazwa.setBounds(400, 150, 300, 30);
+        nazwa.setBounds(320, 15, 300, 40);
         nazwa.setFont(poppins);
-        panel.add(nazwa);
-
-        plik_rodzaj = new JLabel("Wybierz rodzaj pliku:");
-        plik_rodzaj.setBounds(100, 200, 300, 30);
-        plik_rodzaj.setFont(poppins);
-        panel.add(plik_rodzaj);
-
-        String[] rodzaje = {"  Plik tekstowy", "  Plik binarny"};
-        wybor_rodzaju = new JComboBox<>(rodzaje);
-        wybor_rodzaju.setBounds(400, 200, 300, 30);
-        wybor_rodzaju.setBackground(Color.WHITE);
-        wybor_rodzaju.setFont(poppins);
-        panel.add(wybor_rodzaju);
+        nazwa.setBackground(new Color(0xE1E1E1));
+        nazwa.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+        nazwa.setVisible(false);
+        menu.add(nazwa);
+        add(menu);
 
 
-        szerokosc_lab = new JLabel("Szerokość labiryntu:");
-        szerokosc_lab.setBounds(100, 250, 150, 30);
-        szerokosc_lab.setFont(poppins);
-        panel.add(szerokosc_lab);
+        tytul = new JLabel("Rozwiązywacz labiryntu", SwingConstants.CENTER);
+        tytul.setFont(syne);
+        tytul.setBounds(-60, 100, 1000, 60);
+        add(tytul);
 
-        szerokosc = new JTextField();
-        szerokosc.setBounds(400, 250, 300, 30);
-        szerokosc.setFont(poppins);
-        panel.add(szerokosc);
 
-        wysokosc_lab = new JLabel("Wysokość labiryntu:");
-        wysokosc_lab.setBounds(100, 300, 150, 30);
-        wysokosc_lab.setFont(poppins);
-        panel.add(wysokosc_lab);
-
-        wysokosc = new JTextField();
-        wysokosc.setBounds(400, 300, 300, 30);
-        wysokosc.setFont(poppins);
-        panel.add(wysokosc);
 
         wyswietl = new JButton("Wyświetl labirynt");
         wyswietl.setBounds(100, 380, 200, 50);
@@ -117,25 +100,25 @@ public class GUI extends JFrame {
         obrazek.setIcon(icon);
         panel.add(obrazek);
 
-        znajdz_sciezke = new JButton("Znajdź najkrótszą ścieżkę");
-        znajdz_sciezke.setBounds(100, 780, 200, 50);
-        znajdz_sciezke.setFocusable(false);
-        znajdz_sciezke.setHorizontalTextPosition(JButton.CENTER);
-        znajdz_sciezke.setVerticalTextPosition(JButton.CENTER);
-        znajdz_sciezke.setBackground(new Color(0xAFD6D1));
-        znajdz_sciezke.setBorder(BorderFactory.createEmptyBorder());
-        znajdz_sciezke.setFont(poppins);
-        panel.add(znajdz_sciezke);
+        znajdzSciezke = new JButton("Znajdź najkrótszą ścieżkę");
+        znajdzSciezke.setBounds(100, 780, 200, 50);
+        znajdzSciezke.setFocusable(false);
+        znajdzSciezke.setHorizontalTextPosition(JButton.CENTER);
+        znajdzSciezke.setVerticalTextPosition(JButton.CENTER);
+        znajdzSciezke.setBackground(new Color(0xAFD6D1));
+        znajdzSciezke.setBorder(BorderFactory.createEmptyBorder());
+        znajdzSciezke.setFont(poppins);
+        panel.add(znajdzSciezke);
 
-        zmien_pkt = new JButton("Zmień punkt startowy/końcowy");
-        zmien_pkt.setBounds(320, 780, 240, 50);
-        zmien_pkt.setFocusable(false);
-        zmien_pkt.setHorizontalTextPosition(JButton.CENTER);
-        zmien_pkt.setVerticalTextPosition(JButton.CENTER);
-        zmien_pkt.setBackground(new Color(0xAFD6D1));
-        zmien_pkt.setBorder(BorderFactory.createEmptyBorder());
-        zmien_pkt.setFont(poppins);
-        panel.add(zmien_pkt);
+        zmienPkt = new JButton("Zmień punkt startowy/końcowy");
+        zmienPkt.setBounds(320, 780, 240, 50);
+        zmienPkt.setFocusable(false);
+        zmienPkt.setHorizontalTextPosition(JButton.CENTER);
+        zmienPkt.setVerticalTextPosition(JButton.CENTER);
+        zmienPkt.setBackground(new Color(0xAFD6D1));
+        zmienPkt.setBorder(BorderFactory.createEmptyBorder());
+        zmienPkt.setFont(poppins);
+        panel.add(zmienPkt);
 
         panel.setBounds(0, 0, 1000, 1000);
         add(panel);
@@ -143,7 +126,17 @@ public class GUI extends JFrame {
         setVisible(true);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == nazwaPliku) {
+            nazwa.setVisible(true);
+        }
+    }
+
+
     public static void main(String[] args) {
         new GUI();
     }
+
+
 }
