@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -182,6 +183,11 @@ public class GUI extends JFrame implements ActionListener {
                 if (selectedFile != null) {
                     nazwa.setText("   "  +selectedFile.getName());
                     wczytywacz Wczytywacz = new wczytywacz();
+                    try {
+                        new wczytywacz.Odczyt(selectedFile.getAbsolutePath());
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                     wczytaneDane.add(Wczytywacz.dane);
                     znajdzSciezke.setVisible(true);
                     revalidate();

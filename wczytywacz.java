@@ -1,14 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 
-public class wczytywacz {
+public class wczytywacz{
     JPanel dane;
     JLabel tytulSekcji;
-    JLabel wspolrzedneP;
-    JLabel wspolrzedneK;
+    static JLabel wspolrzedneP;
+    static JLabel wspolrzedneK;
     JButton zmienP;
     JButton zmienK;
 
@@ -45,7 +47,7 @@ public class wczytywacz {
         dane.add(wspolrzedneK);
 
         zmienP = new JButton("Zmień");
-        zmienP.setBounds(500, 50, 70, 30);
+        zmienP.setBounds(420, 50, 70, 30);
         zmienP.setFocusable(false);
         zmienP.setHorizontalTextPosition(JButton.CENTER);
         zmienP.setVerticalTextPosition(JButton.CENTER);
@@ -56,7 +58,7 @@ public class wczytywacz {
 
 
         zmienK = new JButton("Zmień");
-        zmienK.setBounds(500, 100, 70, 30);
+        zmienK.setBounds(420, 100, 70, 30);
         zmienK.setFocusable(false);
         zmienK.setHorizontalTextPosition(JButton.CENTER);
         zmienK.setVerticalTextPosition(JButton.CENTER);
@@ -66,5 +68,26 @@ public class wczytywacz {
         dane.add(zmienK);
     }
 
+
+    public static class Odczyt {
+        Odczyt(String nazwaPliku) throws FileNotFoundException {
+            File plik = new File(nazwaPliku);
+            Scanner in = new Scanner(plik);
+
+            int row = 0;
+            while (in.hasNextLine()) {
+                String line = in.nextLine();
+                for (int i = 0; i < line.length(); i++) {
+                    char symbol = line.charAt(i);
+                    if (symbol == 'P') {
+                        wspolrzedneP.setText("Współrzędne punktu startowego:  (" + i + ", " + row + ")");
+                    } else if (symbol == 'K') {
+                        wspolrzedneK.setText("Współrzędne punktu końcowego:  (" + i + ", " + row + ")");
+                    }
+                }
+                row++;
+            }
+        }
+    }
 
 }
