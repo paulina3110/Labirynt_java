@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -10,6 +12,7 @@ public class GUI extends JFrame implements ActionListener {
 
     JLabel tytul;
     JPanel menu;
+    JPanel wczytaneDane;
     JTextField nazwa;
     JButton wyswietl;
     JButton znajdzSciezke;
@@ -18,7 +21,7 @@ public class GUI extends JFrame implements ActionListener {
 
 
     GUI() {
-        setTitle("Labirynt");
+        setTitle("Rozwiązywacz labiryntu");
         setSize(900, 1000);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -54,6 +57,12 @@ public class GUI extends JFrame implements ActionListener {
         menu.setBackground(new Color(0xE1E1E1));
         menu.setLayout(null);
 
+        wczytaneDane = new JPanel();
+        wczytaneDane.setBounds(0, 200, 1000, 400);
+        wczytaneDane.setFont(poppins);
+        wczytaneDane.setBackground(Color.white);
+        wczytaneDane.setLayout(null);
+
 
         nazwaPliku = new JButton("Podaj nazwę pliku z labiryntem");
         nazwaPliku.setBounds(40, 15, 250, 40);
@@ -71,7 +80,25 @@ public class GUI extends JFrame implements ActionListener {
         nazwa.setFont(poppins);
         nazwa.setBackground(new Color(0xE1E1E1));
         nazwa.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+        nazwa.setLayout(null);
+        nazwa.setMargin(new Insets(5, 10, 5, 10));
         nazwa.setVisible(false);
+        nazwa.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    wczytywacz Wczytywacz = new wczytywacz();
+                    wczytaneDane.add(Wczytywacz.dane);
+                    znajdzSciezke.setVisible(true);
+                    // Odświeżenie wyglądu okna
+                    revalidate();
+                    repaint();
+                    System.out.println("Wciśnięto Enter");
+                }
+            }
+        });
+
+        add(wczytaneDane);
         menu.add(nazwa);
         add(menu);
 
@@ -80,7 +107,6 @@ public class GUI extends JFrame implements ActionListener {
         tytul.setFont(syne);
         tytul.setBounds(-60, 100, 1000, 60);
         add(tytul);
-
 
 
         wyswietl = new JButton("Wyświetl labirynt");
@@ -93,12 +119,12 @@ public class GUI extends JFrame implements ActionListener {
         wyswietl.setFont(poppins);
         panel.add(wyswietl);
 
-
+        /*
         ImageIcon icon = new ImageIcon("labirynt.jpg");
         JLabel obrazek = new JLabel();
         obrazek.setBounds(100, 400, 1000, 400);
         obrazek.setIcon(icon);
-        panel.add(obrazek);
+        panel.add(obrazek);*/
 
         znajdzSciezke = new JButton("Znajdź najkrótszą ścieżkę");
         znajdzSciezke.setBounds(100, 780, 200, 50);
@@ -108,8 +134,10 @@ public class GUI extends JFrame implements ActionListener {
         znajdzSciezke.setBackground(new Color(0xAFD6D1));
         znajdzSciezke.setBorder(BorderFactory.createEmptyBorder());
         znajdzSciezke.setFont(poppins);
+        znajdzSciezke.setVisible(false);
         panel.add(znajdzSciezke);
 
+        /*
         zmienPkt = new JButton("Zmień punkt startowy/końcowy");
         zmienPkt.setBounds(320, 780, 240, 50);
         zmienPkt.setFocusable(false);
@@ -118,7 +146,7 @@ public class GUI extends JFrame implements ActionListener {
         zmienPkt.setBackground(new Color(0xAFD6D1));
         zmienPkt.setBorder(BorderFactory.createEmptyBorder());
         zmienPkt.setFont(poppins);
-        panel.add(zmienPkt);
+        panel.add(zmienPkt);*/
 
         panel.setBounds(0, 0, 1000, 1000);
         add(panel);
@@ -132,6 +160,7 @@ public class GUI extends JFrame implements ActionListener {
             nazwa.setVisible(true);
         }
     }
+
 
 
     public static void main(String[] args) {
