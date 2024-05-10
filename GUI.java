@@ -7,6 +7,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.stage.FileChooser;
 
 public class GUI extends JFrame implements ActionListener {
 
@@ -64,8 +67,8 @@ public class GUI extends JFrame implements ActionListener {
         wczytaneDane.setLayout(null);
 
 
-        nazwaPliku = new JButton("Podaj nazwę pliku z labiryntem");
-        nazwaPliku.setBounds(40, 15, 250, 40);
+        nazwaPliku = new JButton("Wybierz plik z labiryntem");
+        nazwaPliku.setBounds(40, 15, 220, 40);
         nazwaPliku.setFocusable(false);
         nazwaPliku.setHorizontalTextPosition(JButton.CENTER);
         nazwaPliku.setVerticalTextPosition(JButton.CENTER);
@@ -76,13 +79,14 @@ public class GUI extends JFrame implements ActionListener {
         menu.add(nazwaPliku);
 
         nazwa = new JTextField();
-        nazwa.setBounds(320, 15, 300, 40);
+        nazwa.setBounds(300, 15, 300, 40);
         nazwa.setFont(poppins);
         nazwa.setBackground(new Color(0xE1E1E1));
         nazwa.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         nazwa.setLayout(null);
         nazwa.setMargin(new Insets(5, 10, 5, 10));
         nazwa.setVisible(false);
+        /*
         nazwa.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -93,10 +97,9 @@ public class GUI extends JFrame implements ActionListener {
                     // Odświeżenie wyglądu okna
                     revalidate();
                     repaint();
-                    System.out.println("Wciśnięto Enter");
                 }
             }
-        });
+        });*/
 
         add(wczytaneDane);
         menu.add(nazwa);
@@ -108,7 +111,7 @@ public class GUI extends JFrame implements ActionListener {
         tytul.setBounds(-60, 100, 1000, 60);
         add(tytul);
 
-
+        /*
         wyswietl = new JButton("Wyświetl labirynt");
         wyswietl.setBounds(100, 380, 200, 50);
         wyswietl.setFocusable(false);
@@ -117,7 +120,7 @@ public class GUI extends JFrame implements ActionListener {
         wyswietl.setBackground(new Color(0xAFD6D1));
         wyswietl.setBorder(BorderFactory.createEmptyBorder());
         wyswietl.setFont(poppins);
-        panel.add(wyswietl);
+        panel.add(wyswietl);*/
 
         /*
         ImageIcon icon = new ImageIcon("labirynt.jpg");
@@ -158,14 +161,33 @@ public class GUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == nazwaPliku) {
             nazwa.setVisible(true);
+            wyborPliku fileChooserThread = new wyborPliku();
+            fileChooserThread.start();
         }
     }
-
 
 
     public static void main(String[] args) {
         new GUI();
     }
 
-
+    class wyborPliku extends Thread {
+        @Override
+        public void run() {
+            JFXPanel panel = new JFXPanel();
+            Platform.runLater(() -> {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Wybierz plik");
+                File selectedFile = fileChooser.showOpenDialog(null);
+                if (selectedFile != null) {
+                    nazwa.setText("   "  +selectedFile.getName());
+                    wczytywacz Wczytywacz = new wczytywacz();
+                    wczytaneDane.add(Wczytywacz.dane);
+                    znajdzSciezke.setVisible(true);
+                    revalidate();
+                    repaint();
+                }
+            });
+        }
+    }
 }
