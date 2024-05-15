@@ -10,16 +10,18 @@ import java.io.IOException;
 public class GUI extends JFrame implements ActionListener {
     JFileChooser fileChooser;
     JLabel tytul;
+    JLabel komunikaty;
     JPanel menu;
     JPanel wczytaneDane;
     JPanel wczytanyLabirynt;
     JTextField nazwa;
     JButton znajdzSciezke;
     JButton nazwaPliku;
+    JButton zapiszRozwiazanie;
 
     GUI() {
         setTitle("Rozwiązywacz labiryntu");
-        setSize(900, 1000);
+        setSize(900, 1200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -55,7 +57,7 @@ public class GUI extends JFrame implements ActionListener {
         menu.setLayout(null);
 
         wczytaneDane = new JPanel();
-        wczytaneDane.setBounds(0, 200, 1000, 300);
+        wczytaneDane.setBounds(0, 300, 1000, 300);
         wczytaneDane.setFont(poppins);
         wczytaneDane.setBackground(Color.white);
         wczytaneDane.setLayout(null);
@@ -70,7 +72,7 @@ public class GUI extends JFrame implements ActionListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setViewportView(wczytanyLabirynt);
-        scrollPane.setBounds(100, 500, 683, 450);
+        scrollPane.setBounds(100, 600, 683, 450);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.black));
         add(scrollPane);
 
@@ -85,8 +87,20 @@ public class GUI extends JFrame implements ActionListener {
         nazwaPliku.addActionListener(this);
         menu.add(nazwaPliku);
 
+        zapiszRozwiazanie = new JButton("Zapisz rozwiązanie");
+        zapiszRozwiazanie.setBounds(610, 15, 220, 40);
+        zapiszRozwiazanie.setFocusable(false);
+        zapiszRozwiazanie.setHorizontalTextPosition(JButton.CENTER);
+        zapiszRozwiazanie.setVerticalTextPosition(JButton.CENTER);
+        zapiszRozwiazanie.setBackground(new Color(0xE1E1E1));
+        zapiszRozwiazanie.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+        zapiszRozwiazanie.setFont(poppins);
+        zapiszRozwiazanie.setEnabled(false);
+        //zapiszRozwiazanie.addActionListener(this);
+        menu.add(zapiszRozwiazanie);
+
         nazwa = new JTextField();
-        nazwa.setBounds(300, 15, 300, 40);
+        nazwa.setBounds(290, 15, 300, 40);
         nazwa.setFont(poppins);
         nazwa.setBackground(new Color(0xE1E1E1));
         nazwa.setBorder(BorderFactory.createLineBorder(Color.black, 1));
@@ -98,14 +112,29 @@ public class GUI extends JFrame implements ActionListener {
         menu.add(nazwa);
         add(menu);
 
-
         tytul = new JLabel("Rozwiązywacz labiryntu", SwingConstants.CENTER);
         tytul.setFont(syne);
-        tytul.setBounds(-60, 100, 1000, 60);
+        tytul.setBounds(-60, 200, 1000, 60);
         add(tytul);
 
+
+        komunikaty = new JLabel();
+        komunikaty.setFont(poppins);
+        komunikaty.setPreferredSize(new Dimension(650, 200));
+        komunikaty.setBackground(Color.white);
+
+        JScrollPane scrollKomunikaty = new JScrollPane(komunikaty);
+        //scrollKomunikaty.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollKomunikaty.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollKomunikaty.setViewportView(komunikaty);
+        scrollKomunikaty.setBounds(100, 100, 680, 60);
+        scrollKomunikaty.setBackground(Color.white);
+        scrollKomunikaty.setBorder(BorderFactory.createLineBorder(Color.black));
+        add(scrollKomunikaty);
+
+
         znajdzSciezke = new JButton("Znajdź najkrótszą ścieżkę");
-        znajdzSciezke.setBounds(100, 380, 200, 50);
+        znajdzSciezke.setBounds(100, 480, 200, 50);
         znajdzSciezke.setFocusable(false);
         znajdzSciezke.setHorizontalTextPosition(JButton.CENTER);
         znajdzSciezke.setVerticalTextPosition(JButton.CENTER);
@@ -113,7 +142,7 @@ public class GUI extends JFrame implements ActionListener {
         znajdzSciezke.setBorder(BorderFactory.createEmptyBorder());
         znajdzSciezke.setFont(poppins);
         znajdzSciezke.setVisible(false);
-        panel.add(znajdzSciezke);
+        add(znajdzSciezke);
 
 
         panel.setBounds(0, 0, 1000, 500);
