@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import javax.swing.JPanel;
 
-public class wczytywacz{
+public class Wczytywacz{
     JPanel dane;
     JLabel tytulSekcji;
     static JLabel wspolrzedneP;
@@ -17,7 +17,7 @@ public class wczytywacz{
     public static int wiersze;
     public static int kolumny;
 
-    wczytywacz(){
+    Wczytywacz(){
         Font poppins = null;
 
         try{
