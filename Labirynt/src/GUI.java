@@ -6,21 +6,15 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.stage.FileChooser;
 
 public class GUI extends JFrame implements ActionListener {
-
+    JFileChooser fileChooser;
     JLabel tytul;
     JPanel menu;
     JPanel wczytaneDane;
     JTextField nazwa;
-    JButton wyswietl;
     JButton znajdzSciezke;
-    JButton zmienPkt;
     JButton nazwaPliku;
-    Labirynt labirynt;
     JPanel panelLabiryntu;
 
     GUI() {
@@ -32,9 +26,9 @@ public class GUI extends JFrame implements ActionListener {
         Font syne = null;
 
         try{
-            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Syne-ExtraBold.ttf")).deriveFont(35f);
+            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")).deriveFont(35f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Syne-ExtraBold.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")));
         }catch (IOException | FontFormatException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -42,12 +36,13 @@ public class GUI extends JFrame implements ActionListener {
         Font poppins = null;
 
         try{
-            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")).deriveFont(13f);
+            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")));
         }catch (IOException | FontFormatException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
+
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -64,6 +59,7 @@ public class GUI extends JFrame implements ActionListener {
         wczytaneDane.setFont(poppins);
         wczytaneDane.setBackground(Color.white);
         wczytaneDane.setLayout(null);
+
 
         nazwaPliku = new JButton("Wybierz plik z labiryntem");
         nazwaPliku.setBounds(40, 15, 220, 40);
@@ -89,10 +85,12 @@ public class GUI extends JFrame implements ActionListener {
         menu.add(nazwa);
         add(menu);
 
+
         tytul = new JLabel("Rozwiązywacz labiryntu", SwingConstants.CENTER);
         tytul.setFont(syne);
         tytul.setBounds(-60, 100, 1000, 60);
         add(tytul);
+
 
         znajdzSciezke = new JButton("Znajdź najkrótszą ścieżkę");
         znajdzSciezke.setBounds(100, 380, 200, 50);
@@ -105,8 +103,10 @@ public class GUI extends JFrame implements ActionListener {
         znajdzSciezke.setVisible(false);
         panel.add(znajdzSciezke);
 
+
         panel.setBounds(0, 0, 1000, 500);
         add(panel);
+
 
         panelLabiryntu = new JPanel();
 
@@ -118,54 +118,37 @@ public class GUI extends JFrame implements ActionListener {
 
         panel.add(panelLabiryntu);
 
+        fileChooser = new JFileChooser();
         setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == nazwaPliku) {
-            nazwa.setVisible(true);
-            wyborPliku fileChooserThread = new wyborPliku(panelLabiryntu);
-            fileChooserThread.start();
+            int returnValue = fileChooser.showOpenDialog(null);
+
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                nazwa.setVisible(true);
+                nazwa.setText("   " + selectedFile.getName());
+                Wczytywacz Wczytywacz = new Wczytywacz();
+                try {
+                    new Wczytywacz.Odczyt(selectedFile.getAbsolutePath());
+                    Wczytywacz.rysujLabirynt(selectedFile.getAbsolutePath());
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+                wczytaneDane.add(Wczytywacz.dane);
+                znajdzSciezke.setVisible(true);
+                panelLabiryntu.setVisible(true);
+                add(panelLabiryntu);
+                panelLabiryntu.revalidate();
+                panelLabiryntu.repaint();
+            }
         }
     }
 
     public static void main(String[] args) {
         new GUI();
-    }
-
-    class wyborPliku extends Thread {
-        private JPanel panelLabiryntu;
-
-        wyborPliku(JPanel panelLabiryntu) {
-            this.panelLabiryntu = panelLabiryntu;
-        }
-
-        @Override
-        public void run() {
-            JFXPanel panel = new JFXPanel();
-            Platform.runLater(() -> {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Wybierz plik");
-                File selectedFile = fileChooser.showOpenDialog(null);
-                if (selectedFile != null) {
-                    nazwa.setText("   "  +selectedFile.getName());
-                    wczytywacz Wczytywacz = new wczytywacz();
-                    try {
-                        new wczytywacz.Odczyt(selectedFile.getAbsolutePath());
-                        Wczytywacz.rysujLabirynt(selectedFile.getAbsolutePath());
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                    wczytaneDane.add(Wczytywacz.dane);
-                    znajdzSciezke.setVisible(true);
-                    panelLabiryntu.add(new WyswietlLabirynt(wczytywacz.wczytanyLabirynt));
-                    panelLabiryntu.setVisible(true);
-                    add(panelLabiryntu);
-                    panelLabiryntu.revalidate();
-                    panelLabiryntu.repaint();
-                }
-            });
-        }
     }
 }

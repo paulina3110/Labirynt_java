@@ -14,16 +14,14 @@ public class Wczytywacz{
     JButton zmienP;
     JButton zmienK;
 
-    public static int wiersze;
-    public static int kolumny;
 
     Wczytywacz(){
         Font poppins = null;
 
         try{
-            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")).deriveFont(13f);
+            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")));
         }catch (IOException | FontFormatException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -71,7 +69,6 @@ public class Wczytywacz{
         dane.add(zmienK);
     }
 
-    public static Labirynt wczytanyLabirynt;
 
     public void rysujLabirynt(String nazwaPliku) {
         JPanel labiryntPanel = new JPanel() {
@@ -113,15 +110,12 @@ public class Wczytywacz{
             File plik = new File(nazwaPliku);
             Scanner in = new Scanner(plik);
 
-            Labirynt labirynt = new Labirynt();
             int row = 0;
-            int kol = 0;
+
             while (in.hasNextLine()) {
                 String line = in.nextLine();
-                kol = line.length();
                 for (int i = 0; i < line.length(); i++) {
                     char symbol = line.charAt(i);
-                    labirynt.ustawWartosc(row, i, symbol);
                     if (symbol == 'P') {
                         wspolrzedneP.setText("Współrzędne punktu startowego:  (" + i + ", " + row + ")");
                     } else if (symbol == 'K') {
@@ -130,10 +124,6 @@ public class Wczytywacz{
                 }
                 row++;
             }
-            wiersze = row;
-            kolumny = kol;
-            wczytanyLabirynt = labirynt;
-            new WyswietlLabirynt(wczytanyLabirynt);
         }
     }
 
