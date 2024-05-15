@@ -12,10 +12,10 @@ public class GUI extends JFrame implements ActionListener {
     JLabel tytul;
     JPanel menu;
     JPanel wczytaneDane;
+    JPanel wczytanyLabirynt;
     JTextField nazwa;
     JButton znajdzSciezke;
     JButton nazwaPliku;
-    JPanel panelLabiryntu;
 
     GUI() {
         setTitle("Rozwiązywacz labiryntu");
@@ -23,7 +23,7 @@ public class GUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
-        Font syne = null;
+        Font syne = new Font("Arial", Font.BOLD, 35);
 
         try{
             syne = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")).deriveFont(35f);
@@ -33,7 +33,7 @@ public class GUI extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
 
-        Font poppins = null;
+        Font poppins = new Font("Arial", Font.PLAIN, 12);
 
         try{
             poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
@@ -55,11 +55,24 @@ public class GUI extends JFrame implements ActionListener {
         menu.setLayout(null);
 
         wczytaneDane = new JPanel();
-        wczytaneDane.setBounds(0, 200, 1000, 1000);
+        wczytaneDane.setBounds(0, 200, 1000, 300);
         wczytaneDane.setFont(poppins);
         wczytaneDane.setBackground(Color.white);
         wczytaneDane.setLayout(null);
 
+        wczytanyLabirynt = new JPanel();
+        wczytanyLabirynt.setPreferredSize(new Dimension(2000, 2000));
+        wczytanyLabirynt.setFont(poppins);
+        wczytanyLabirynt.setBackground(Color.white);
+        wczytanyLabirynt.setLayout(new BoxLayout(wczytanyLabirynt, BoxLayout.Y_AXIS));
+
+        JScrollPane scrollPane = new JScrollPane(wczytanyLabirynt);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setViewportView(wczytanyLabirynt);
+        scrollPane.setBounds(100, 500, 683, 450);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.black));
+        add(scrollPane);
 
         nazwaPliku = new JButton("Wybierz plik z labiryntem");
         nazwaPliku.setBounds(40, 15, 220, 40);
@@ -91,7 +104,6 @@ public class GUI extends JFrame implements ActionListener {
         tytul.setBounds(-60, 100, 1000, 60);
         add(tytul);
 
-
         znajdzSciezke = new JButton("Znajdź najkrótszą ścieżkę");
         znajdzSciezke.setBounds(100, 380, 200, 50);
         znajdzSciezke.setFocusable(false);
@@ -106,17 +118,6 @@ public class GUI extends JFrame implements ActionListener {
 
         panel.setBounds(0, 0, 1000, 500);
         add(panel);
-
-
-        panelLabiryntu = new JPanel();
-
-        panelLabiryntu.setBounds(50, 550, 500, 500);
-        panelLabiryntu.setFont(poppins);
-        panelLabiryntu.setLayout(null);
-        panelLabiryntu.setVisible(false);
-        panelLabiryntu.setBackground(Color.WHITE);
-
-        panel.add(panelLabiryntu);
 
         fileChooser = new JFileChooser();
         setVisible(true);
@@ -139,11 +140,10 @@ public class GUI extends JFrame implements ActionListener {
                     throw new RuntimeException(ex);
                 }
                 wczytaneDane.add(Wczytywacz.dane);
+                wczytanyLabirynt.add(Wczytywacz.wczytanyLabirynt);
                 znajdzSciezke.setVisible(true);
-                panelLabiryntu.setVisible(true);
-                add(panelLabiryntu);
-                panelLabiryntu.revalidate();
-                panelLabiryntu.repaint();
+                revalidate();
+                repaint();
             }
         }
     }

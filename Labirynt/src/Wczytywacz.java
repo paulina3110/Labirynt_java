@@ -8,12 +8,14 @@ import javax.swing.JPanel;
 
 public class Wczytywacz{
     JPanel dane;
+    JPanel wczytanyLabirynt;
     JLabel tytulSekcji;
     static JLabel wspolrzedneP;
     static JLabel wspolrzedneK;
     JButton zmienP;
     JButton zmienK;
-
+    static int wysokosc;
+    static int szerokosc;
 
     Wczytywacz(){
         Font poppins = null;
@@ -31,6 +33,11 @@ public class Wczytywacz{
         dane.setFont(poppins);
         dane.setBackground(Color.white);
         dane.setLayout(null);
+
+        wczytanyLabirynt = new JPanel();
+        wczytanyLabirynt.setBounds(0, 0, 1000, 1000);
+        wczytanyLabirynt.setBackground(Color.white);
+        wczytanyLabirynt.setLayout(null);
 
         tytulSekcji = new JLabel("Wczytane parametry labiryntu:");
         tytulSekcji.setBounds(100, 0, 300, 30);
@@ -83,6 +90,7 @@ public class Wczytywacz{
                     while (in.hasNextLine()) {
                         String line = in.nextLine();
                         for (int i = 0; i < line.length(); i++) {
+                            wysokosc = line.length();
                             char symbol = line.charAt(i);
                             if (symbol == ' ') {
                                 g.setColor(Color.WHITE);
@@ -93,15 +101,16 @@ public class Wczytywacz{
                         }
                         row++;
                     }
+                    szerokosc = row;
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         };
-        labiryntPanel.setBounds(100, 300, 1000, 500);
+        labiryntPanel.setBounds(0, 0, 2000, 2000);
         labiryntPanel.setBackground(Color.white);
-
-        dane.add(labiryntPanel);
+        wczytanyLabirynt.add(labiryntPanel);
     }
 
 
