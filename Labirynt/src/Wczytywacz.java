@@ -16,10 +16,13 @@ public class Wczytywacz{
     JButton zmienK;
     static int wysokosc;
     static int szerokosc;
+    public static int wiersze;
+    public static int kolumny;
 
     Wczytywacz(){
-        Font poppins = null;
+        //Font poppins = null;
 
+        Font poppins = new Font("Arial", Font.PLAIN, 12);
         try{
             poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -77,7 +80,7 @@ public class Wczytywacz{
     }
 
 
-    public void rysujLabirynt(String nazwaPliku) {
+    /*public void rysujLabirynt(String nazwaPliku) {
         JPanel labiryntPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -112,19 +115,19 @@ public class Wczytywacz{
         labiryntPanel.setBackground(Color.white);
         wczytanyLabirynt.add(labiryntPanel);
     }
-
+*/
 
     public static class Odczyt {
-        Odczyt(String nazwaPliku) throws FileNotFoundException {
+        Odczyt(String nazwaPliku, Labirynt labirynt) throws FileNotFoundException {
             File plik = new File(nazwaPliku);
             Scanner in = new Scanner(plik);
-
             int row = 0;
-
             while (in.hasNextLine()) {
                 String line = in.nextLine();
+                kolumny = line.length();
                 for (int i = 0; i < line.length(); i++) {
                     char symbol = line.charAt(i);
+                    labirynt.wstawWartosc(row, i, symbol);
                     if (symbol == 'P') {
                         wspolrzedneP.setText("Współrzędne punktu startowego:  (" + i + ", " + row + ")");
                     } else if (symbol == 'K') {
@@ -133,11 +136,10 @@ public class Wczytywacz{
                 }
                 row++;
             }
+            wiersze = row;
         }
     }
 
 
 
 }
-
-

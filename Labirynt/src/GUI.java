@@ -19,6 +19,8 @@ public class GUI extends JFrame implements ActionListener {
     JButton nazwaPliku;
     JButton zapiszRozwiazanie;
 
+    Labirynt labirynt = new Labirynt();
+
     GUI() {
         setTitle("Rozwiązywacz labiryntu");
         setSize(900, 1200);
@@ -144,6 +146,10 @@ public class GUI extends JFrame implements ActionListener {
         znajdzSciezke.setVisible(false);
         add(znajdzSciezke);
 
+        JPanel labiryntPanel = new WyswietlLabirynt(labirynt);
+        labiryntPanel.setBounds(0, 0, 2000, 2000);
+        labiryntPanel.setBackground(Color.white);
+        wczytanyLabirynt.add(labiryntPanel);
 
         panel.setBounds(0, 0, 1000, 500);
         add(panel);
@@ -163,8 +169,8 @@ public class GUI extends JFrame implements ActionListener {
                 nazwa.setText("   " + selectedFile.getName());
                 Wczytywacz Wczytywacz = new Wczytywacz();
                 try {
-                    new Wczytywacz.Odczyt(selectedFile.getAbsolutePath());
-                    Wczytywacz.rysujLabirynt(selectedFile.getAbsolutePath());
+                    new Wczytywacz.Odczyt(selectedFile.getAbsolutePath(), labirynt);
+                    //Wczytywacz.rysujLabirynt(selectedFile.getAbsolutePath());
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
