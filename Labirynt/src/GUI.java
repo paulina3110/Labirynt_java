@@ -65,7 +65,7 @@ public class GUI extends JFrame implements ActionListener {
         wczytaneDane.setLayout(null);
 
         wczytanyLabirynt = new JPanel();
-        wczytanyLabirynt.setPreferredSize(new Dimension(2000, 2000));
+        //wczytanyLabirynt.setPreferredSize(new Dimension(2000, 2000));
         wczytanyLabirynt.setFont(poppins);
         wczytanyLabirynt.setBackground(Color.white);
         wczytanyLabirynt.setLayout(new BoxLayout(wczytanyLabirynt, BoxLayout.Y_AXIS));
@@ -74,6 +74,7 @@ public class GUI extends JFrame implements ActionListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setViewportView(wczytanyLabirynt);
+
         scrollPane.setBounds(100, 600, 683, 450);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.black));
         add(scrollPane);
@@ -146,9 +147,11 @@ public class GUI extends JFrame implements ActionListener {
         znajdzSciezke.setVisible(false);
         add(znajdzSciezke);
 
+
         JPanel labiryntPanel = new WyswietlLabirynt(labirynt);
-        labiryntPanel.setBounds(0, 0, 2000, 2000);
+        //labiryntPanel.setBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
         labiryntPanel.setBackground(Color.white);
+        labiryntPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
         wczytanyLabirynt.add(labiryntPanel);
 
         panel.setBounds(0, 0, 1000, 500);
@@ -163,6 +166,7 @@ public class GUI extends JFrame implements ActionListener {
         if (e.getSource() == nazwaPliku) {
             int returnValue = fileChooser.showOpenDialog(null);
 
+
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 nazwa.setVisible(true);
@@ -175,6 +179,10 @@ public class GUI extends JFrame implements ActionListener {
                     throw new RuntimeException(ex);
                 }
                 wczytaneDane.add(Wczytywacz.dane);
+
+                wczytanyLabirynt.setPreferredSize(new Dimension(Wczytywacz.kolumny *10 +5, Wczytywacz.wiersze*10 +5));
+                System.out.println(Wczytywacz.kolumny);
+                System.out.println(Wczytywacz.wiersze);
                 wczytanyLabirynt.add(Wczytywacz.wczytanyLabirynt);
                 znajdzSciezke.setVisible(true);
                 revalidate();

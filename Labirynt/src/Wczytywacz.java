@@ -8,20 +8,16 @@ import javax.swing.JPanel;
 
 public class Wczytywacz{
     JPanel dane;
-    JPanel wczytanyLabirynt;
+    static JPanel wczytanyLabirynt;
     JLabel tytulSekcji;
     static JLabel wspolrzedneP;
     static JLabel wspolrzedneK;
     JButton zmienP;
     JButton zmienK;
-    static int wysokosc;
-    static int szerokosc;
     public static int wiersze;
     public static int kolumny;
 
     Wczytywacz(){
-        //Font poppins = null;
-
         Font poppins = new Font("Arial", Font.PLAIN, 12);
         try{
             poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
@@ -38,7 +34,7 @@ public class Wczytywacz{
         dane.setLayout(null);
 
         wczytanyLabirynt = new JPanel();
-        wczytanyLabirynt.setBounds(0, 0, 1000, 1000);
+        //wczytanyLabirynt.setBounds(0, 0, 1000, 1000);
         wczytanyLabirynt.setBackground(Color.white);
         wczytanyLabirynt.setLayout(null);
 
@@ -79,44 +75,6 @@ public class Wczytywacz{
         dane.add(zmienK);
     }
 
-
-    /*public void rysujLabirynt(String nazwaPliku) {
-        JPanel labiryntPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                try {
-                    File plik = new File(nazwaPliku);
-                    Scanner in = new Scanner(plik);
-
-                    int row = 0;
-                    while (in.hasNextLine()) {
-                        String line = in.nextLine();
-                        for (int i = 0; i < line.length(); i++) {
-                            wysokosc = line.length();
-                            char symbol = line.charAt(i);
-                            if (symbol == ' ') {
-                                g.setColor(Color.WHITE);
-                            } else if (symbol == 'x' || symbol == 'X') {
-                                g.setColor(Color.BLACK);
-                            } else if (symbol == 'K' || symbol == 'P') g.setColor(new Color(0xAFD6D1));
-                            g.fillRect(i * 20, row * 20, 20, 20);
-                        }
-                        row++;
-                    }
-                    szerokosc = row;
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        labiryntPanel.setBounds(0, 0, 2000, 2000);
-        labiryntPanel.setBackground(Color.white);
-        wczytanyLabirynt.add(labiryntPanel);
-    }
-*/
-
     public static class Odczyt {
         Odczyt(String nazwaPliku, Labirynt labirynt) throws FileNotFoundException {
             File plik = new File(nazwaPliku);
@@ -137,9 +95,12 @@ public class Wczytywacz{
                 row++;
             }
             wiersze = row;
+            //wczytanyLabirynt.setBounds(0, 0,kolumny *10+5, wiersze *10+5);
         }
     }
 
 
 
 }
+
+
