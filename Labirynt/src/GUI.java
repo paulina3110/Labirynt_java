@@ -151,7 +151,7 @@ public class GUI extends JFrame implements ActionListener {
         JPanel labiryntPanel = new WyswietlLabirynt(labirynt);
         //labiryntPanel.setBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
         labiryntPanel.setBackground(Color.white);
-        labiryntPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        labiryntPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE+5));
         wczytanyLabirynt.add(labiryntPanel);
 
         panel.setBounds(0, 0, 1000, 500);
