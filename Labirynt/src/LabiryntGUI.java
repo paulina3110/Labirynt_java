@@ -216,12 +216,10 @@ public class LabiryntGUI extends JFrame implements ActionListener {
                 File selectedFile = fileChooser.getSelectedFile();
                 nazwa.setVisible(true);
                 nazwa.setText("   " + selectedFile.getName());
+
                 Wczytywacz wczytywacz = new Wczytywacz();
-                try {
-                    new Wczytywacz.Odczyt(selectedFile.getAbsolutePath(), graf);
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
+                wczytywacz.wczytajPlik(selectedFile.getAbsolutePath(), graf);
+
                 startWiersz = graf.pobierzStart().pobierzWiersz();
                 startKolumna = graf.pobierzStart().pobierzKolumna();
                 koniecWiersz = graf.pobierzKoniec().pobierzWiersz();

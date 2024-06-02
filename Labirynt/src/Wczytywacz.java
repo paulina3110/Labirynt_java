@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Scanner;
+import java.io.*;
 
 public class Wczytywacz {
 
@@ -19,45 +16,37 @@ public class Wczytywacz {
 
     }
 
-    public static class Odczyt {
-        Odczyt(String nazwaPliku, Labirynt graf) throws FileNotFoundException {
-            File plik = new File(nazwaPliku);
-            Scanner in = new Scanner(plik);
-            int row = 0;
-            while (in.hasNextLine()) {
-                String line = in.nextLine();
-                for (int i = 0; i < line.length(); i++) {
-                    char symbol = line.charAt(i);
-                    Komorka komorka = new Komorka(row, i, symbol == 'X');
-                    graf.dodajKomorke(komorka);
-
-                    if (symbol == 'P') {
-                        graf.ustawStart(komorka);
-
-                    } else if (symbol == 'K') {
-                        graf.ustawKoniec(komorka);
-
-                    }
-
-                    if (!komorka.pobierzSciane()) {
-                        if (i > 0) {
-                            Komorka left = graf.pobierzKomorke(row, i - 1);
-                            if (left != null && !left.pobierzSciane()) {
-                                graf.dodajPolaczenie(komorka, left);
-                            }
-                        }
-                        if (row > 0) {
-                            Komorka up = graf.pobierzKomorke(row - 1, i);
-                            if (up != null && !up.pobierzSciane()) {
-                                graf.dodajPolaczenie(komorka, up);
-                            }
-                        }
-                    }
-                }
-                row++;
+    public void wczytajPlik(String nazwaPliku, Labirynt graf) {
+        if (isBinaryFile(nazwaPliku)) {
+            try {
+                new OdczytBin(nazwaPliku, graf);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
-            Wczytywacz.wiersze = row;
-            Wczytywacz.kolumny = graf.pobierzLiczbeKolumn();
+        } else {
+            try {
+                new OdczytTxt(nazwaPliku, graf);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    private boolean isBinaryFile(String nazwaPliku) {
+
+        try (FileInputStream fis = new FileInputStream(nazwaPliku)) {
+            int size = fis.available();
+            if (size > 40) {
+                byte[] buffer = new byte[40];
+                fis.read(buffer);
+                int fileId = ((buffer[3] & 0xFF) << 24) | ((buffer[2] & 0xFF) << 16) |
+                        ((buffer[1] & 0xFF) << 8) | (buffer[0] & 0xFF);
+                return fileId == 0x52524243;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
