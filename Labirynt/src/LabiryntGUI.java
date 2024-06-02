@@ -110,6 +110,7 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         zapiszRozwiazanie.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         zapiszRozwiazanie.setFont(poppins);
         zapiszRozwiazanie.setEnabled(false);
+        zapiszRozwiazanie.addActionListener(this);
         menu.add(zapiszRozwiazanie);
 
         nazwa = new JTextField();
@@ -246,9 +247,14 @@ public class LabiryntGUI extends JFrame implements ActionListener {
                 labiryntPanel.setBackground(Color.white);
                 labiryntPanel.setPreferredSize(new Dimension(Wczytywacz.kolumny * 10 + 5, Wczytywacz.wiersze * 10 + 5));
                 pudelkoNaLabirynt.add(labiryntPanel);
+                zapiszRozwiazanie.setEnabled(true);
                 revalidate();
                 repaint();
             }
+        } else if (e.getSource() == zapiszRozwiazanie){
+            ZapisLabiryntu zapisLabiryntu = new ZapisLabiryntu();
+            zapisLabiryntu.zapiszRozwiazanieJakoObraz(graf, "plik.png");
+            zapisLabiryntu.zapiszRozwiazanieDoPlikuTekstowego(graf, "labirynt.txt");
         }
     }
 }
