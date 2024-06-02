@@ -6,8 +6,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
-public class GUI extends JFrame implements ActionListener {
+public class Main extends JFrame implements ActionListener {
     JFileChooser fileChooser;
     JLabel tytul;
     JLabel komunikaty;
@@ -19,9 +20,9 @@ public class GUI extends JFrame implements ActionListener {
     JButton nazwaPliku;
     JButton zapiszRozwiazanie;
 
-    Labirynt labirynt = new Labirynt();
+    Labirynt graf = new Labirynt();
 
-    GUI() {
+    Main() {
         setTitle("Rozwiązywacz labiryntu");
         setSize(900, 1200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -30,9 +31,9 @@ public class GUI extends JFrame implements ActionListener {
         Font syne = new Font("Arial", Font.BOLD, 35);
 
         try{
-            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")).deriveFont(35f);
+            syne = Font.createFont(Font.TRUETYPE_FONT, new File(/*"Labirynt/*/"Syne-ExtraBold.ttf")).deriveFont(35f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(/*"Labirynt/*/"Syne-ExtraBold.ttf")));
         }catch (IOException | FontFormatException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -40,9 +41,9 @@ public class GUI extends JFrame implements ActionListener {
         Font poppins = new Font("Arial", Font.PLAIN, 12);
 
         try{
-            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
+            poppins = Font.createFont(Font.TRUETYPE_FONT, new File(/*"Labirynt/*/"Poppins-Medium.ttf")).deriveFont(13f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(/*"Labirynt/*/"Poppins-Medium.ttf")));
         }catch (IOException | FontFormatException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -144,11 +145,13 @@ public class GUI extends JFrame implements ActionListener {
         znajdzSciezke.setBackground(new Color(0xAFD6D1));
         znajdzSciezke.setBorder(BorderFactory.createEmptyBorder());
         znajdzSciezke.setFont(poppins);
-        znajdzSciezke.setVisible(false);
+        //znajdzSciezke.setVisible(false);
+        znajdzSciezke.setVisible(true);
+        znajdzSciezke.addActionListener(this);
         add(znajdzSciezke);
 
 
-        JPanel labiryntPanel = new WyswietlLabirynt(labirynt);
+        JPanel labiryntPanel = new WyswietlLabirynt(graf);
         //labiryntPanel.setBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
         labiryntPanel.setBackground(Color.white);
         labiryntPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE+5));
@@ -173,7 +176,7 @@ public class GUI extends JFrame implements ActionListener {
                 nazwa.setText("   " + selectedFile.getName());
                 Wczytywacz Wczytywacz = new Wczytywacz();
                 try {
-                    new Wczytywacz.Odczyt(selectedFile.getAbsolutePath(), labirynt);
+                    new Wczytywacz.Odczyt(selectedFile.getAbsolutePath(), graf);
                     //Wczytywacz.rysujLabirynt(selectedFile.getAbsolutePath());
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
@@ -184,7 +187,18 @@ public class GUI extends JFrame implements ActionListener {
                 System.out.println(Wczytywacz.kolumny);
                 System.out.println(Wczytywacz.wiersze);
                 wczytanyLabirynt.add(Wczytywacz.wczytanyLabirynt);
-                znajdzSciezke.setVisible(true);
+                //znajdzSciezke.setVisible(true);
+                revalidate();
+                repaint();
+            }
+        } else if (e.getSource() == znajdzSciezke) {
+            List<Komorka> sciezka = Rozwiazywacz.znajdzNajkrotszaSciezke(graf);
+            if (!sciezka.isEmpty()) {
+                wczytanyLabirynt.removeAll();
+                JPanel labiryntPanel = new WyswietlLabirynt(graf);
+                labiryntPanel.setBackground(Color.white);
+                labiryntPanel.setPreferredSize(new Dimension(Wczytywacz.kolumny * 10 + 5, Wczytywacz.wiersze * 10 + 5));
+                wczytanyLabirynt.add(labiryntPanel);
                 revalidate();
                 repaint();
             }
@@ -192,6 +206,6 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new GUI();
+        new Main();
     }
 }

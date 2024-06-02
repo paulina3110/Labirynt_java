@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
-import javax.swing.JPanel;
 
-public class Wczytywacz{
+public class Wczytywacz {
     JPanel dane;
     static JPanel wczytanyLabirynt;
     JLabel tytulSekcji;
@@ -17,13 +16,13 @@ public class Wczytywacz{
     public static int wiersze;
     public static int kolumny;
 
-    Wczytywacz(){
+    Wczytywacz() {
         Font poppins = new Font("Arial", Font.PLAIN, 12);
-        try{
-            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
+        try {
+            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")).deriveFont(13f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")));
-        }catch (IOException | FontFormatException e){
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")));
+        } catch (IOException | FontFormatException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
 
@@ -34,7 +33,6 @@ public class Wczytywacz{
         dane.setLayout(null);
 
         wczytanyLabirynt = new JPanel();
-        //wczytanyLabirynt.setBounds(0, 0, 1000, 1000);
         wczytanyLabirynt.setBackground(Color.white);
         wczytanyLabirynt.setLayout(null);
 
@@ -63,7 +61,6 @@ public class Wczytywacz{
         zmienP.setFont(poppins);
         dane.add(zmienP);
 
-
         zmienK = new JButton("Zmień");
         zmienK.setBounds(420, 100, 70, 30);
         zmienK.setFocusable(false);
@@ -74,33 +71,45 @@ public class Wczytywacz{
         zmienK.setFont(poppins);
         dane.add(zmienK);
     }
-
     public static class Odczyt {
-        Odczyt(String nazwaPliku, Labirynt labirynt) throws FileNotFoundException {
+        Odczyt(String nazwaPliku, Labirynt graf) throws FileNotFoundException {
             File plik = new File(nazwaPliku);
             Scanner in = new Scanner(plik);
             int row = 0;
             while (in.hasNextLine()) {
                 String line = in.nextLine();
-                kolumny = line.length();
                 for (int i = 0; i < line.length(); i++) {
                     char symbol = line.charAt(i);
-                    labirynt.wstawWartosc(row, i, symbol);
+                    Komorka komorka = new Komorka(row, i, symbol == 'X');
+                    graf.dodajKomorke(komorka);
+
                     if (symbol == 'P') {
-                        wspolrzedneP.setText("Współrzędne punktu startowego:  (" + i + ", " + row + ")");
+                        graf.ustawStart(komorka);
+                        Wczytywacz.wspolrzedneP.setText("Współrzędne punktu startowego: (" + i + ", " + row + ")");
                     } else if (symbol == 'K') {
-                        wspolrzedneK.setText("Współrzędne punktu końcowego:  (" + i + ", " + row + ")");
+                        graf.ustawKoniec(komorka);
+                        Wczytywacz.wspolrzedneK.setText("Współrzędne punktu końcowego: (" + i + ", " + row + ")");
+                    }
+
+                    if (!komorka.pobierzSciane()) {
+                        if (i > 0) {
+                            Komorka left = graf.pobierzKomorke(row, i - 1);
+                            if (left != null && !left.pobierzSciane()) {
+                                graf.dodajPolaczenie(komorka, left);
+                            }
+                        }
+                        if (row > 0) {
+                            Komorka up = graf.pobierzKomorke(row - 1, i);
+                            if (up != null && !up.pobierzSciane()) {
+                                graf.dodajPolaczenie(komorka, up);
+                            }
+                        }
                     }
                 }
                 row++;
             }
-            wiersze = row;
-            //wczytanyLabirynt.setBounds(0, 0,kolumny *10+5, wiersze *10+5);
+            Wczytywacz.wiersze = row;
+            Wczytywacz.kolumny = graf.pobierzLiczbeKolumn();
         }
     }
-
-
-
 }
-
-

@@ -1,30 +1,42 @@
 import java.awt.*;
 import javax.swing.JPanel;
 
-public class WyswietlLabirynt extends JPanel{
+public class WyswietlLabirynt extends JPanel {
 
-    private Labirynt labirynt;
+    private Labirynt graf;
 
-    public WyswietlLabirynt(Labirynt labirynt) {
-        this.labirynt = labirynt;
+    public WyswietlLabirynt(Labirynt graf) {
+        this.graf = graf;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        int wiersze = Wczytywacz.wiersze;
-        int kolumny = Wczytywacz.kolumny;
+
+        int wiersze = graf.pobierzLiczbeWierszy();
+        int kolumny = graf.pobierzLiczbeKolumn();
+
+
         for (int i = 0; i < wiersze; i++) {
             for (int j = 0; j < kolumny; j++) {
-                char xij = labirynt.zwrocWartosc(i, j);
-                if (xij == 'X' || xij == 'x') g2d.setColor(Color.BLACK);
-                else if (xij == 'K' || xij == 'P') g2d.setColor(new Color(0xAFD6D1));
-                else if (xij == ' ') g2d.setColor(Color.WHITE);
-                g2d.fillRect(j * 10, i * 10, 10, 10);
+                Komorka komorka = graf.pobierzKomorke(i, j);
+                if (graf.pobierzGraf().containsKey(komorka)) {
+                    if (komorka.pobierzSciane()) {
+                        g2d.setColor(Color.BLACK);
+                    } else {
+                        g2d.setColor(Color.WHITE);
+                    }
+                    if (komorka.equals(graf.pobierzStart())) {
+                        g2d.setColor(new Color(0x058379));
+                    } else if (komorka.equals(graf.pobierzKoniec())) {
+                        g2d.setColor(new Color(0x6008AF));
+                    } else if(komorka.pobierzCzySciezka()) {
+                        g2d.setColor(new Color(0xFF9D9D));
+                    }
+                    g2d.fillRect(j * 10, i * 10, 10, 10);
+                }
             }
         }
     }
 }
-
-
