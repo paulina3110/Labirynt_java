@@ -28,11 +28,11 @@ public class WyswietlLabirynt extends JPanel {
                         g2d.setColor(Color.WHITE);
                     }
                     if (komorka.equals(graf.pobierzStart())) {
-                        g2d.setColor(new Color(0x058379));
+                        g2d.setColor(new Color(0x6AA46F));
                     } else if (komorka.equals(graf.pobierzKoniec())) {
-                        g2d.setColor(new Color(0x6008AF));
+                        g2d.setColor(new Color(0xB47DD6));
                     } else if(komorka.pobierzCzySciezka()) {
-                        g2d.setColor(new Color(0xFF9D9D));
+                        g2d.setColor(new Color(0xFCF29A));
                     }
                     g2d.fillRect(j * 10, i * 10, 10, 10);
                 }
