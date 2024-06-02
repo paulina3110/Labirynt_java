@@ -253,8 +253,13 @@ public class LabiryntGUI extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == zapiszRozwiazanie){
             ZapisLabiryntu zapisLabiryntu = new ZapisLabiryntu();
-            zapisLabiryntu.zapiszRozwiazanieJakoObraz(graf, "plik.png");
-            zapisLabiryntu.zapiszRozwiazanieDoPlikuTekstowego(graf, "labirynt.txt");
+
+            String _nazwaPliku = nazwa.getText();
+            _nazwaPliku = _nazwaPliku.replace(" ", "");
+            _nazwaPliku = _nazwaPliku.replaceAll("\\.(?=[^\\.]+$).*", "");
+
+            zapisLabiryntu.zapiszRozwiazanieJakoObraz(graf, "rozwiazanie_" + _nazwaPliku + ".png");
+            zapisLabiryntu.zapiszRozwiazanieDoPlikuTekstowego(graf, "rozwiazanie_" + _nazwaPliku + ".txt");
         }
     }
 }

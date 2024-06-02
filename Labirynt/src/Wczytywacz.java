@@ -7,15 +7,10 @@ import java.util.Scanner;
 
 public class Wczytywacz {
 
-    //static JLabel wspolrzedneP;
-    //static JLabel wspolrzedneK;
     public static int wiersze;
     public static int kolumny;
     static JPanel wczytanyLabirynt;
-    public static int startWiersz;
-    public static int startKolumna;
-    public static int koniecWiersz;
-    public static int koniecKolumna;
+
 
     Wczytywacz() {
         wczytanyLabirynt = new JPanel();
@@ -38,14 +33,10 @@ public class Wczytywacz {
 
                     if (symbol == 'P') {
                         graf.ustawStart(komorka);
-                        startKolumna = i;
-                        startWiersz = row;
-                        //Wczytywacz.wspolrzedneP.setText("Współrzędne punktu startowego: (" + i + ", " + row + ")");
+
                     } else if (symbol == 'K') {
                         graf.ustawKoniec(komorka);
-                        koniecKolumna = i;
-                        koniecWiersz = row;
-                        //Wczytywacz.wspolrzedneK.setText("Współrzędne punktu końcowego: (" + i + ", " + row + ")");
+
                     }
 
                     if (!komorka.pobierzSciane()) {
