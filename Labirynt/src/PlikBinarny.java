@@ -53,7 +53,7 @@ public class PlikBinarny {
         this.exitY = exitY;
     }
 
-    public void setRes(byte[] res) {
+    public void setReserved(byte[] res) {
         this.reserved = res;
     }
 
@@ -76,7 +76,6 @@ public class PlikBinarny {
     public void setPath(byte path) {
         this.path = path;
     }
-
 
     public void setSteps(short steps) {
         this.steps = steps;

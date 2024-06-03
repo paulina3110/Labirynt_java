@@ -1,13 +1,21 @@
 import java.io.*;
 
-public class OdczytBin{
+public class OdczytBin {
+    OdczytBin(String nazwaPliku, Labirynt graf) throws IOException {
+        PlikBinarny plikBinarny = odczytNaglowka(nazwaPliku);
+        if (plikBinarny != null) {
+            odczytsekcjiKodujacej(nazwaPliku, plikBinarny, graf);
 
-    PlikBinarny plikBinarny = new PlikBinarny();
+            if (plikBinarny.getSolutionOffset() != 0) {
+                odczytSekcjiRozwiazania(nazwaPliku, plikBinarny, graf);
+            }
+        }
+    }
 
-    public void odczytNaglowka(String nazwaPliku){
+    private PlikBinarny odczytNaglowka(String nazwaPliku) {
+        PlikBinarny plikBinarny = new PlikBinarny();
         try {
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(new File(nazwaPliku)));
-
             try {
                 plikBinarny.setFileId(Integer.reverseBytes(dataInputStream.readInt()));
                 plikBinarny.setEscape(dataInputStream.readByte());
@@ -17,37 +25,44 @@ public class OdczytBin{
                 plikBinarny.setEntryY(Short.reverseBytes(dataInputStream.readShort()));
                 plikBinarny.setExitX(Short.reverseBytes(dataInputStream.readShort()));
                 plikBinarny.setExitY(Short.reverseBytes(dataInputStream.readShort()));
-                plikBinarny.setRes(dataInputStream.readNBytes(12));
+                plikBinarny.setReserved(dataInputStream.readNBytes(12));
                 plikBinarny.setCounter(Integer.reverseBytes(dataInputStream.readInt()));
                 plikBinarny.setSolutionOffset(Integer.reverseBytes(dataInputStream.readInt()));
                 plikBinarny.setSeparator(dataInputStream.readByte());
                 plikBinarny.setWall(dataInputStream.readByte());
                 plikBinarny.setPath(dataInputStream.readByte());
                 dataInputStream.close();
-
             } catch (EOFException _) {
             }
-        } catch (IOException _) {
+        } catch (IOException ex) {
+            return null;
         }
-
+        return plikBinarny;
     }
 
-    public void odczytSekcjiKodujacej(String nazwaPliku, Labirynt graf) {
-        try {
-            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nazwaPliku));
-            dataInputStream.skipBytes(40); // Skip header
+    private void odczytsekcjiKodujacej(String nazwaPliku, PlikBinarny plikBinarny, Labirynt graf) throws IOException {
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nazwaPliku));
+        dataInputStream.skipBytes(40);
 
-            int row = 0;
-            int col = 0;
-            int counter = plikBinarny.getCounter();
+        int kolumna = 0;
+        int wiersz = 0;
 
-            for (int i = 0; i < counter; i++) {
-                byte separator = dataInputStream.readByte();
-                byte value = dataInputStream.readByte();
-                byte count = dataInputStream.readByte();
+        for (int i = 0; i < plikBinarny.getCounter(); i++) {
+            byte separator = dataInputStream.readByte();
+            byte value = dataInputStream.readByte();
+            byte counter = dataInputStream.readByte();
 
-                for (int j = 0; j < (count == 0 ? 1 : count); j++) {
-                    char symbol;
+            for (int j = 0; j < Byte.toUnsignedInt(counter) + 1; j++) {
+                if (separator != plikBinarny.getSeparator()) {
+                    return;
+                }
+
+                char symbol;
+                if (wiersz == plikBinarny.getEntryY() - 1 && kolumna == plikBinarny.getEntryX() - 1) {
+                    symbol = 'P';
+                } else if (wiersz == plikBinarny.getExitY() - 1 && kolumna == plikBinarny.getExitX() - 1) {
+                    symbol = 'K';
+                } else {
                     if (value == plikBinarny.getWall()) {
                         symbol = 'X';
                     } else if (value == plikBinarny.getPath()) {
@@ -55,96 +70,79 @@ public class OdczytBin{
                     } else {
                         continue;
                     }
-
-                    Komorka komorka = new Komorka(row, col, symbol == 'X');
-                    graf.dodajKomorke(komorka);
-
-                    if (symbol == ' ') {
-                        if (col > 0) {
-                            Komorka left = graf.pobierzKomorke(row, col - 1);
-                            if (left != null && !left.pobierzSciane()) {
-                                graf.dodajPolaczenie(komorka, left);
-                            }
-                        }
-                        if (row > 0) {
-                            Komorka up = graf.pobierzKomorke(row - 1, col);
-                            if (up != null && !up.pobierzSciane()) {
-                                graf.dodajPolaczenie(komorka, up);
-                            }
-                        }
-                    }
-
-                    col++;
-                    if (col >= plikBinarny.getColumns()) {
-                        col = 0;
-                        row++;
-                    }
                 }
-            }
 
-            dataInputStream.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+                Komorka komorka = new Komorka(wiersz, kolumna, symbol == 'X');
+                graf.dodajKomorke(komorka);
 
-    public void odczytSekcjiRozwiazania(String nazwaPliku, Labirynt graf) {
-        if (plikBinarny.getSolutionOffset() == 0) {
-            return;
-        }
-
-        try {
-            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nazwaPliku));
-            dataInputStream.skipBytes(plikBinarny.getSolutionOffset());
-
-            int currentX = plikBinarny.getEntryX();
-            int currentY = plikBinarny.getEntryY();
-
-            try {
-                while (true) {
-                    int direction = Integer.reverseBytes(dataInputStream.readInt());
-                    byte steps = dataInputStream.readByte();
-                    int stepCount = steps == 0 ? 1 : steps;
-
-                    for (int i = 0; i < stepCount; i++) {
-                        switch (direction) {
-                            case 'N':
-                                currentY--;
-                                break;
-                            case 'E':
-                                currentX++;
-                                break;
-                            case 'S':
-                                currentY++;
-                                break;
-                            case 'W':
-                                currentX--;
-                                break;
-                            default:
-                                throw new IOException("Nieznany kierunek: " + direction);
+                if (symbol == ' ') {
+                    if (kolumna > 0) {
+                        Komorka left = graf.pobierzKomorke(wiersz, kolumna - 1);
+                        if (left != null && !left.pobierzSciane()) {
+                            graf.dodajPolaczenie(komorka, left);
                         }
-
-                        Komorka komorka = graf.pobierzKomorke(currentY - 1, currentX - 1);
-                        if (komorka != null && !komorka.pobierzSciane()) {
-                            graf.dodajKomorke(komorka);
-                        } else {
-                            throw new IOException("Nieprawidłowa komórka w ścieżce rozwiązania: " + currentX + ", " + currentY);
+                    }
+                    if (wiersz > 0) {
+                        Komorka up = graf.pobierzKomorke(wiersz - 1, kolumna);
+                        if (up != null && !up.pobierzSciane()) {
+                            graf.dodajPolaczenie(komorka, up);
                         }
                     }
                 }
-            } catch (EOFException _) {
-            }
 
-            dataInputStream.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+                if (symbol == 'P') {
+                    graf.ustawStart(komorka);
+                } else if (symbol == 'K') {
+                    graf.ustawKoniec(komorka);
+                }
+
+                kolumna++;
+                if (kolumna >= plikBinarny.getColumns()) {
+                    kolumna = 0;
+                    wiersz++;
+                }
+            }
         }
+        Wczytywacz.wiersze = wiersz;
+        Wczytywacz.kolumny = plikBinarny.getColumns();
+        dataInputStream.close();
     }
 
-    OdczytBin(String nazwaPliku, Labirynt graf) throws FileNotFoundException {
-        odczytNaglowka(nazwaPliku);
-        odczytSekcjiKodujacej(nazwaPliku, graf);
-        odczytSekcjiRozwiazania(nazwaPliku, graf);
+    private void odczytSekcjiRozwiazania(String nazwaPliku, PlikBinarny plikBinarny, Labirynt graf) throws IOException {
+        DataInputStream dataInputStream = new DataInputStream(new FileInputStream(nazwaPliku));
+        dataInputStream.skipBytes(plikBinarny.getSolutionOffset() + 4);
 
+        int wiersz = plikBinarny.getEntryY() - 1;
+        int kolumna = plikBinarny.getEntryX() - 1;
+
+        while (dataInputStream.available() > 0) {
+            byte dir = dataInputStream.readByte();
+            byte cou = dataInputStream.readByte();
+
+            for (int j = 0; j < Byte.toUnsignedInt(cou) + 1; j++) {
+                switch (dir) {
+                    case 0x4E:
+                        wiersz--;
+                        break;
+                    case 0x45:
+                        kolumna++;
+                        break;
+                    case 0x53:
+                        wiersz++;
+                        break;
+                    case 0x57:
+                        kolumna--;
+                        break;
+                    default:
+                        throw new IOException("Nieznany kierunek: " + dir);
+                }
+                Komorka komorka = graf.pobierzKomorke(wiersz, kolumna);
+                if (komorka == null || komorka.pobierzSciane()) {
+                    throw new IOException("Nieprawidłowa komórka w ścieżce rozwiązania: " + kolumna + ", " + wiersz);
+                }
+                komorka.ustawCzySciezka(true);
+            }
+        }
+        dataInputStream.close();
     }
 }

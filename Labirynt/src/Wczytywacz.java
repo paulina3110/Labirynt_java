@@ -17,11 +17,13 @@ public class Wczytywacz {
     }
 
     public void wczytajPlik(String nazwaPliku, Labirynt graf) {
-        if (isBinaryFile(nazwaPliku)) {
+        if (sprawdzCzyBinarny(nazwaPliku)) {
             try {
                 new OdczytBin(nazwaPliku, graf);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         } else {
             try {
@@ -32,7 +34,7 @@ public class Wczytywacz {
         }
     }
 
-    private boolean isBinaryFile(String nazwaPliku) {
+    private boolean sprawdzCzyBinarny(String nazwaPliku) {
 
         try (FileInputStream fis = new FileInputStream(nazwaPliku)) {
             int size = fis.available();
