@@ -152,7 +152,7 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         znajdzSciezke.setBackground(new Color(0xAFD6D1));
         znajdzSciezke.setBorder(BorderFactory.createEmptyBorder());
         znajdzSciezke.setFont(poppins);
-        znajdzSciezke.setVisible(true);
+        znajdzSciezke.setVisible(false);
         znajdzSciezke.addActionListener(this);
         add(znajdzSciezke);
 
@@ -216,6 +216,7 @@ public class LabiryntGUI extends JFrame implements ActionListener {
                 File selectedFile = fileChooser.getSelectedFile();
                 nazwa.setVisible(true);
                 nazwa.setText("   " + selectedFile.getName());
+                znajdzSciezke.setVisible(true);
 
                 Wczytywacz wczytywacz = new Wczytywacz();
                 wczytywacz.wczytajPlik(selectedFile.getAbsolutePath(), graf);

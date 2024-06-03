@@ -75,7 +75,7 @@ public class OdczytBin {
                 Komorka komorka = new Komorka(wiersz, kolumna, symbol == 'X');
                 graf.dodajKomorke(komorka);
 
-                if (symbol == ' ') {
+                if (!komorka.pobierzSciane()) {
                     if (kolumna > 0) {
                         Komorka left = graf.pobierzKomorke(wiersz, kolumna - 1);
                         if (left != null && !left.pobierzSciane()) {
