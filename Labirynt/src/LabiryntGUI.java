@@ -3,8 +3,9 @@ import java.awt.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class LabiryntGUI extends JFrame implements ActionListener {
     private static int koniecWiersz;
     private static int koniecKolumna;
 
+    private boolean zmieniamyStart = false;
+    private boolean zmieniamyKoniec = false;
+
     public LabiryntGUI() {
         setTitle("Rozwiązywacz labiryntu");
         setSize(900, 1200);
@@ -44,9 +48,9 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         Font syne = new Font("Arial", Font.BOLD, 35);
 
         try {
-            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")).deriveFont(35f);
+            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Syne-ExtraBold.ttf")).deriveFont(35f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Syne-ExtraBold.ttf")));
         } catch (IOException | FontFormatException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -54,9 +58,9 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         Font poppins = new Font("Arial", Font.PLAIN, 12);
 
         try {
-            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
+            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")).deriveFont(13f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")));
         } catch (IOException | FontFormatException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -159,6 +163,12 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         JPanel labiryntPanel = new WyswietlLabirynt(graf);
         labiryntPanel.setBackground(Color.white);
         labiryntPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE + 5));
+        labiryntPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                zmianaPunktow(e);
+            }
+        });
         pudelkoNaLabirynt.add(labiryntPanel);
 
         panel.setBounds(0, 0, 1000, 500);
@@ -187,6 +197,7 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         zmienP.setBackground(new Color(0xAFD6D1));
         zmienP.setBorder(BorderFactory.createEmptyBorder());
         zmienP.setFont(poppins);
+        zmienP.addActionListener(this);
         dane.add(zmienP);
 
         zmienK = new JButton("Zmień");
@@ -197,6 +208,7 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         zmienK.setBackground(new Color(0xAFD6D1));
         zmienK.setBorder(BorderFactory.createEmptyBorder());
         zmienK.setFont(poppins);
+        zmienK.addActionListener(this);
         dane.add(zmienK);
 
         wspolrzedneP = new JLabel("Współrzędne punktu startowego:");
@@ -206,6 +218,42 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         wspolrzedneK = new JLabel("Współrzędne punktu końcowego:");
         wspolrzedneK.setBounds(100, 100, 300, 30);
         wspolrzedneK.setFont(poppins);
+    }
+
+    private void zmianaPunktow(MouseEvent e) {
+        int kolumna = e.getX() / 10;
+        int wiersz = e.getY() / 10;
+        Komorka kliknietaKomorka = graf.pobierzKomorke(wiersz, kolumna);
+
+        if (zmieniamyStart) {
+            Komorka startowaKomorka = graf.pobierzStart();
+            if (!startowaKomorka.equals(kliknietaKomorka)) {
+                graf.ustawStart(kliknietaKomorka);
+                wspolrzedneP.setText("Współrzędne punktu startowego: (" + wiersz + ", " + kolumna + ")");
+            }
+            zmieniamyStart = false;
+        } else if (zmieniamyKoniec) {
+            Komorka koncowaKomorka = graf.pobierzKoniec();
+            if (!koncowaKomorka.equals(kliknietaKomorka)) {
+                graf.ustawKoniec(kliknietaKomorka);
+                wspolrzedneK.setText("Współrzędne punktu końcowego: (" + wiersz + ", " + kolumna + ")");
+            }
+            zmieniamyKoniec = false;
+        }
+
+        pudelkoNaLabirynt.removeAll();
+        JPanel labiryntPanel = new WyswietlLabirynt(graf);
+        labiryntPanel.setBackground(Color.white);
+        labiryntPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE + 5));
+        labiryntPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                zmianaPunktow(e);
+            }
+        });
+        pudelkoNaLabirynt.add(labiryntPanel);
+        pudelkoNaLabirynt.revalidate();
+        pudelkoNaLabirynt.repaint();
     }
 
     @Override
@@ -238,6 +286,12 @@ public class LabiryntGUI extends JFrame implements ActionListener {
                 revalidate();
                 repaint();
             }
+        }  else if (e.getSource() == zmienP) {
+            zmieniamyStart = true;
+            zmieniamyKoniec = false;
+        } else if (e.getSource() == zmienK) {
+            zmieniamyKoniec = true;
+            zmieniamyStart = false;
         } else if (e.getSource() == znajdzSciezke) {
             List<Komorka> sciezka = Rozwiazywacz.znajdzNajkrotszaSciezke(graf);
             if (!sciezka.isEmpty()) {
