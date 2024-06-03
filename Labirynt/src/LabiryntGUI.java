@@ -41,16 +41,16 @@ public class LabiryntGUI extends JFrame implements ActionListener {
 
     public LabiryntGUI() {
         setTitle("Rozwiązywacz labiryntu");
-        setSize(900, 1200);
+        setSize(900, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
         Font syne = new Font("Arial", Font.BOLD, 35);
 
         try {
-            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Syne-ExtraBold.ttf")).deriveFont(35f);
+            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")).deriveFont(35f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Syne-ExtraBold.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")));
         } catch (IOException | FontFormatException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -58,9 +58,9 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         Font poppins = new Font("Arial", Font.PLAIN, 12);
 
         try {
-            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")).deriveFont(13f);
+            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")));
         } catch (IOException | FontFormatException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -76,7 +76,7 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         menu.setLayout(null);
 
         wczytaneDane = new JPanel();
-        wczytaneDane.setBounds(0, 300, 1000, 300);
+        wczytaneDane.setBounds(0, 230, 1000, 300);
         wczytaneDane.setFont(poppins);
         wczytaneDane.setBackground(Color.white);
         wczytaneDane.setLayout(null);
@@ -90,7 +90,7 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setViewportView(pudelkoNaLabirynt);
-        scrollPane.setBounds(100, 600, 683, 450);
+        scrollPane.setBounds(100, 450, 683, 290);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.black));
         add(scrollPane);
 
@@ -132,24 +132,24 @@ public class LabiryntGUI extends JFrame implements ActionListener {
 
         tytul = new JLabel("Rozwiązywacz labiryntu", SwingConstants.CENTER);
         tytul.setFont(syne);
-        tytul.setBounds(-60, 200, 1000, 60);
+        tytul.setBounds(-60, 150, 1000, 60);
         add(tytul);
 
         komunikaty = new JLabel();
         komunikaty.setFont(poppins);
-        komunikaty.setPreferredSize(new Dimension(650, 200));
+        komunikaty.setPreferredSize(new Dimension(650, 150));
         komunikaty.setBackground(Color.white);
 
         JScrollPane scrollKomunikaty = new JScrollPane(komunikaty);
         scrollKomunikaty.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollKomunikaty.setViewportView(komunikaty);
-        scrollKomunikaty.setBounds(100, 100, 680, 60);
+        scrollKomunikaty.setBounds(100, 100, 680, 40);
         scrollKomunikaty.setBackground(Color.white);
         scrollKomunikaty.setBorder(BorderFactory.createLineBorder(Color.black));
         add(scrollKomunikaty);
 
         znajdzSciezke = new JButton("Znajdź najkrótszą ścieżkę");
-        znajdzSciezke.setBounds(100, 480, 200, 50);
+        znajdzSciezke.setBounds(100, 380, 200, 40);
         znajdzSciezke.setFocusable(false);
         znajdzSciezke.setHorizontalTextPosition(JButton.CENTER);
         znajdzSciezke.setVerticalTextPosition(JButton.CENTER);
