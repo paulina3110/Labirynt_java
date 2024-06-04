@@ -12,7 +12,7 @@ import java.util.List;
 public class LabiryntGUI extends JFrame implements ActionListener {
     JFileChooser fileChooser;
     JLabel tytul;
-    JLabel komunikaty;
+    JTextArea komunikaty;
     JPanel menu;
     JPanel wczytaneDane;
     JPanel pudelkoNaLabirynt;
@@ -48,9 +48,9 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         Font syne = new Font("Arial", Font.BOLD, 35);
 
         try {
-            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")).deriveFont(35f);
+            syne = Font.createFont(Font.TRUETYPE_FONT, new File("Syne-ExtraBold.ttf")).deriveFont(35f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Syne-ExtraBold.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Syne-ExtraBold.ttf")));
         } catch (IOException | FontFormatException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -58,9 +58,9 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         Font poppins = new Font("Arial", Font.PLAIN, 12);
 
         try {
-            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")).deriveFont(13f);
+            poppins = Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")).deriveFont(13f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Labirynt/Poppins-Medium.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Poppins-Medium.ttf")));
         } catch (IOException | FontFormatException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -135,10 +135,13 @@ public class LabiryntGUI extends JFrame implements ActionListener {
         tytul.setBounds(-60, 150, 1000, 60);
         add(tytul);
 
-        komunikaty = new JLabel();
+        komunikaty = new JTextArea("");
         komunikaty.setFont(poppins);
         komunikaty.setPreferredSize(new Dimension(650, 150));
         komunikaty.setBackground(Color.white);
+        komunikaty.setLineWrap(true);
+        komunikaty.setWrapStyleWord(true);
+        komunikaty.setEditable(false);
 
         JScrollPane scrollKomunikaty = new JScrollPane(komunikaty);
         scrollKomunikaty.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -303,6 +306,8 @@ public class LabiryntGUI extends JFrame implements ActionListener {
                 zapiszRozwiazanie.setEnabled(true);
                 revalidate();
                 repaint();
+            } else {
+                komunikaty.setText("Brak ścieżki");
             }
         } else if (e.getSource() == zapiszRozwiazanie){
             ZapisLabiryntu zapisLabiryntu = new ZapisLabiryntu();

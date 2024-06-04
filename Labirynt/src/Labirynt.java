@@ -73,4 +73,3 @@ public class Labirynt {
         return null;
     }
 }
-

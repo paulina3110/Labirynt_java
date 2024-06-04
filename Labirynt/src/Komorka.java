@@ -48,4 +48,3 @@ public class Komorka {
         return Objects.hash(wiersz, kolumna);
     }
 }
-

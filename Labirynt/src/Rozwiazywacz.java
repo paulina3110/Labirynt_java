@@ -42,4 +42,3 @@ public class Rozwiazywacz {
         return sciezka;
     }
 }
-
